@@ -1,0 +1,9 @@
+<ul>
+
+    <li>
+      {{ todo.text }}
+      <button (click)="delete.emit(todo.id)">Remove</button>
+      <button (click)="update.emit({id:todo.id, text:newTodo})">update</button>
+    </li>
+
+</ul>
