@@ -1,6 +1,12 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
+export interface TodoItemModel {
+  id: number;
+  title: string;
+  completed?: boolean;
+}
+
 @Component({
   selector: 'app-todo-item',
   standalone: true,
@@ -10,11 +16,11 @@ import { FormsModule } from '@angular/forms';
 })
 export class TodoItem {
 
-  @Input() todo!: { id: number; text: string };
+  @Input() todo!: TodoItemModel;
 
-  @Input() newTodo: string = '';
-
-  @Output() update = new EventEmitter<{ id: number; text: string }>();
+  @Output() update = new EventEmitter<{id:number, title:string}>();
   @Output() delete = new EventEmitter<number>();
+
+  editTitle = '';
 
 }

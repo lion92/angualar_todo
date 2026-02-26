@@ -1,40 +1,81 @@
-import { Component } from '@angular/core';
-import {FormsModule} from '@angular/forms';
-import {TodoItem} from '../todo-item/todo-item';
+import { Component, OnInit, signal } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { TodoItem } from '../todo-item/todo-item';
+import { HttpClient } from '@angular/common/http';
+import { firstValueFrom } from 'rxjs';
+
+interface TodoDTO {
+  id: number;
+  title: string;
+  completed?: boolean;
+}
 
 @Component({
   selector: 'app-todo',
-  imports: [
-    FormsModule,
-    TodoItem,
-  ],
+  standalone: true,
+  imports: [FormsModule, TodoItem],
   templateUrl: './todo.html',
-  styleUrl: './todo.css',
-  standalone: true
+  styleUrl: './todo.css'
 })
-export class Todo {
-  todo: { id: number, text: string }= {id: 0, text: ''};
-  todos: { id: number, text: string }[] = [];
-  newTodo: string="";
-  constructor() {
+export class Todo implements OnInit {
+
+  apiUrl = 'http://localhost:3005/todos';
+
+  newTodo = signal('');
+  todos = signal<TodoDTO[]>([]);
+
+  constructor(private http: HttpClient) {}
+
+  async ngOnInit() {
+    await this.loadTodos();
   }
 
-  addTodo() {
-    if (this.todo && this.todo.text) {
-      this.todos.push({id: Date.now(), text: this.todo.text});
-      this.todo = {id: 0, text: ''};
-    }
-  }
-    update(event:{id:number, text:string}): void {
-      const todo = this.todos.find(t => t.id === event.id);
-      if (todo) {
-        todo.id=event.id;
-        todo.text =event.text;
-      }
-    }
+  // GET
+  async loadTodos() {
+    const data = await firstValueFrom(
+      this.http.get<TodoDTO[]>(this.apiUrl)
+    );
 
-    delete(event: number): void {
-      this.todos = this.todos.filter(t => t.id !== event);
-    }
+    this.todos.set(data);
+  }
+
+  // CREATE
+  async addTodo() {
+
+    if (!this.newTodo().trim()) return;
+
+    await firstValueFrom(
+      this.http.post<TodoDTO>(this.apiUrl, {
+        title: this.newTodo(),
+        completed: false
+      })
+    );
+
+    this.newTodo.set('');
+    await this.loadTodos();
+  }
+
+  // UPDATE
+  async update(todo: TodoDTO) {
+
+    await firstValueFrom(
+      this.http.patch(`${this.apiUrl}/${todo.id}`, {
+        title: todo.title,
+        completed: todo.completed
+      })
+    );
+
+    await this.loadTodos();
+  }
+
+  // DELETE
+  async delete(id: number) {
+
+    await firstValueFrom(
+      this.http.delete(`${this.apiUrl}/${id}`)
+    );
+
+    await this.loadTodos();
+  }
 
 }

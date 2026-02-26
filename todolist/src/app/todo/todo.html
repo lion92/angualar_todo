@@ -1,11 +1,19 @@
-<p>todo works!</p>
 <div class="container">
-  <input type="text" [(ngModel)]="todo.text" placeholder="Add a new todo" />
-  <input type="text" [(ngModel)]="newTodo" placeholder="Update a todo" />
+
+  <input
+    type="text"
+    [ngModel]="newTodo()"
+    (ngModelChange)="newTodo.set($event)"
+    placeholder="Add a new todo"
+  />
   <button (click)="addTodo()">Add</button>
-  @for (item of todos; track item) {
-  <app-todo-item [newTodo]="newTodo" (delete)="delete($event)" (update)="update($event)" [todo]="item" ></app-todo-item>
+
+  @for (item of todos(); track item.id) {
+    <app-todo-item
+      [todo]="item"
+      (delete)="delete($event)"
+      (update)="update($event)">
+    </app-todo-item>
   }
 
 </div>
-

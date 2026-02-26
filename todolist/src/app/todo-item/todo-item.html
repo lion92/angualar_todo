@@ -1,9 +1,10 @@
 <ul>
 
     <li>
-      {{ todo.text }}
+      {{ todo.title }}
+      <input type="text" [(ngModel)]="editTitle" placeholder="Nouveau titre" />
+      <button (click)="update.emit({id: todo.id, title: editTitle})">Update</button>
       <button (click)="delete.emit(todo.id)">Remove</button>
-      <button (click)="update.emit({id:todo.id, text:newTodo})">update</button>
     </li>
 
 </ul>
