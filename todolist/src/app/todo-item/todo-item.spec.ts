@@ -14,6 +14,8 @@ describe('TodoItem', () => {
 
     fixture = TestBed.createComponent(TodoItem);
     component = fixture.componentInstance;
+    component.todo = { id: 1, title: 'Test', completed: false };
+    fixture.detectChanges();
     await fixture.whenStable();
   });
 
