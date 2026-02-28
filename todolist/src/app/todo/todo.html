@@ -1,19 +1,62 @@
-<div class="container">
+<div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 via-white to-purple-100">
 
-  <input
-    type="text"
-    [ngModel]="newTodo()"
-    (ngModelChange)="newTodo.set($event)"
-    placeholder="Add a new todo"
-  />
-  <button (click)="addTodo()">Add</button>
+  <div class="w-full max-w-xl p-8 bg-white/80 backdrop-blur rounded-3xl shadow-xl border border-white/40">
 
-  @for (item of todos(); track item.id) {
-    <app-todo-item
-      [todo]="item"
-      (delete)="delete($event)"
-      (update)="update($event)">
-    </app-todo-item>
-  }
+    <!-- Header -->
+    <div class="flex items-center justify-between mb-6">
+      <h1 class="text-3xl font-bold text-gray-800">
+        ✨ My Todos
+      </h1>
+      <span class="text-sm text-gray-500">
+        {{ todos().length }} tasks
+      </span>
+    </div>
+
+    <!-- Input -->
+    <div class="flex gap-3 mb-6">
+
+      <input
+        type="text"
+        [ngModel]="newTodo()"
+        (ngModelChange)="newTodo.set($event)"
+        placeholder="What do you need to do?"
+        class="flex-1 px-4 py-3 rounded-xl border border-gray-200 bg-white shadow-sm
+               focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent
+               transition"
+      />
+
+      <button
+        (click)="addTodo()"
+        class="px-5 py-3 rounded-xl bg-gradient-to-r from-blue-500 to-purple-500
+               text-white font-medium shadow hover:shadow-lg hover:scale-105
+               active:scale-95 transition"
+      >
+        Add
+      </button>
+
+    </div>
+
+    <!-- Liste -->
+    <div class="space-y-3 max-h-[400px] overflow-y-auto pr-1">
+
+      @for (item of todos(); track item.id) {
+        <div class="group transition hover:scale-[1.02]">
+          <app-todo-item
+            [todo]="item"
+            (delete)="delete($event)"
+            (update)="update($event)">
+          </app-todo-item>
+        </div>
+      }
+
+      @if (todos().length === 0) {
+        <div class="text-center text-gray-400 py-10">
+          🎉 Nothing to do
+        </div>
+      }
+
+    </div>
+
+  </div>
 
 </div>

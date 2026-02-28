@@ -1,10 +1,35 @@
-<ul>
+<ul class="max-w-xl mx-auto mt-4">
+  <li class="flex items-center gap-3 p-3 bg-white shadow rounded-xl border hover:shadow-md transition">
 
-    <li>
+    <!-- Titre -->
+    <span class="flex-1 font-medium text-gray-700">
       {{ todo.title }}
-      <input type="text" [(ngModel)]="editTitle" placeholder="Nouveau titre" />
-      <button (click)="update.emit({id: todo.id, title: editTitle})">Update</button>
-      <button (click)="delete.emit(todo.id)">Remove</button>
-    </li>
+    </span>
 
+    <!-- Input -->
+    <input
+      type="text"
+      [(ngModel)]="editTitle"
+      placeholder="Nouveau titre"
+      class="border rounded-lg px-2 py-1 focus:outline-none focus:ring-2 focus:ring-blue-400"
+    />
+
+    <!-- Boutons -->
+    <div class="flex gap-2">
+      <button
+        (click)="update.emit({id: todo.id, title: editTitle})"
+        class="px-3 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
+      >
+        Update
+      </button>
+
+      <button
+        (click)="delete.emit(todo.id)"
+        class="px-3 py-1 bg-red-500 text-white rounded-lg hover:bg-red-600 transition"
+      >
+        Remove
+      </button>
+    </div>
+
+  </li>
 </ul>

@@ -1,7 +1,32 @@
+<div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 via-white to-purple-100">
 
-<div class="container">
-  <h1>Hello</h1>
-  <button routerLink="/todo">Todo</button>
-  <router-outlet />
+  <div class="text-center p-10 bg-white/80 backdrop-blur rounded-3xl shadow-xl border border-white/40 max-w-lg w-full">
+
+    <!-- Titre -->
+    <h1 class="text-4xl font-bold text-gray-800 mb-4">
+      👋 Hello
+    </h1>
+
+    <p class="text-gray-500 mb-8">
+      Welcome to your Angular app
+    </p>
+
+    <!-- Bouton -->
+    <button
+      routerLink="/todo"
+      class="px-6 py-3 rounded-xl bg-gradient-to-r from-blue-500 to-purple-500
+             text-white font-semibold shadow-md
+             hover:shadow-lg hover:scale-105 active:scale-95
+             transition duration-200"
+    >
+      Open Todo App
+    </button>
+
+    <!-- Router -->
+    <div class="mt-8">
+      <router-outlet />
+    </div>
+
+  </div>
+
 </div>
-
