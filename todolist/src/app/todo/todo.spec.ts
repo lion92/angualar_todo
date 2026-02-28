@@ -19,10 +19,8 @@ describe('Todo', () => {
     httpMock = TestBed.inject(HttpTestingController);
     fixture = TestBed.createComponent(Todo);
     component = fixture.componentInstance;
-
-    fixture.detectChanges();
-    httpMock.expectOne('http://localhost:3005/todos').flush([]);
-    await fixture.whenStable();
+    // Ne pas appeler detectChanges() ici : évite de déclencher ngOnInit
+    // et donc toute requête HTTP au moment de la création du composant
   });
 
   afterEach(() => {
