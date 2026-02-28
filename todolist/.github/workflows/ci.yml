@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [ master ]
+    branches: [ main ]
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -20,4 +20,4 @@ jobs:
         run: npm install
 
       - name: Lancer les tests
-        run: npm test
+        run: npm test -- --watch=false
