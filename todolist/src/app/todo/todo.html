@@ -1,58 +1,114 @@
-<div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 via-white to-purple-100">
+<div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 via-white to-purple-100 p-4">
 
-  <div class="w-full max-w-xl p-8 bg-white/80 backdrop-blur rounded-3xl shadow-xl border border-white/40">
+  <div class="w-full max-w-xl">
 
-    <!-- Header -->
-    <div class="flex items-center justify-between mb-6">
-      <h1 class="text-3xl font-bold text-gray-800">
-        ✨ My Todos
-      </h1>
-      <span class="text-sm text-gray-500">
-        {{ todos().length }} tasks
-      </span>
-    </div>
+    <div class="bg-white/80 backdrop-blur rounded-3xl shadow-xl border border-white/40 overflow-hidden">
 
-    <!-- Input -->
-    <div class="flex gap-3 mb-6">
+      <!-- Header -->
+      <div class="px-8 pt-8 pb-4">
+        <div class="flex items-center justify-between mb-6">
+          <h1 class="text-3xl font-bold text-gray-800">My Todos</h1>
 
-      <input
-        type="text"
-        [ngModel]="newTodo()"
-        (ngModelChange)="newTodo.set($event)"
-        placeholder="What do you need to do?"
-        class="flex-1 px-4 py-3 rounded-xl border border-gray-200 bg-white shadow-sm
-               focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent
-               transition"
-      />
-
-      <button
-        (click)="addTodo()"
-        class="px-5 py-3 rounded-xl bg-gradient-to-r from-blue-500 to-purple-500
-               text-white font-medium shadow hover:shadow-lg hover:scale-105
-               active:scale-95 transition"
-      >
-        Add
-      </button>
-
-    </div>
-
-    <!-- Liste -->
-    <div class="space-y-3 max-h-[400px] overflow-y-auto pr-1">
-
-      @for (item of todos(); track item.id) {
-        <div class="group transition hover:scale-[1.02]">
-          <app-todo-item
-            [todo]="item"
-            (delete)="delete($event)"
-            (update)="update($event)">
-          </app-todo-item>
+          <span class="text-sm font-medium px-3 py-1 bg-blue-50 text-blue-600 rounded-full">
+            {{ activeCount() }} remaining
+          </span>
         </div>
+
+        <!-- Input -->
+        <div class="flex gap-3">
+          <input
+            type="text"
+            [ngModel]="newTodo()"
+            (ngModelChange)="newTodo.set($event)"
+            (keyup.enter)="addTodo()"
+            placeholder="What do you need to do?"
+            class="flex-1 px-4 py-3 rounded-xl border border-gray-200 bg-white shadow-sm
+                   focus:outline-none focus:ring-2 focus:ring-blue-400 transition text-sm"
+          />
+
+          <button
+            (click)="addTodo()"
+            class="px-5 py-3 rounded-xl bg-gradient-to-r from-blue-500 to-purple-500
+                   text-white font-medium shadow hover:shadow-lg hover:scale-105 active:scale-95 transition text-sm">
+            Add
+          </button>
+        </div>
+      </div>
+
+      <!-- Filters -->
+      <div class="flex border-b border-gray-100 px-8">
+        @for (tab of [['all', 'All'], ['active', 'Active'], ['completed', 'Done']] ; track tab[0]) {
+
+          <button
+            (click)="filter.set($any(tab[0]))"
+            class="px-4 py-3 text-sm font-medium border-b-2 transition -mb-px"
+            [class]="filter() === tab[0]
+              ? 'border-blue-500 text-blue-600'
+              : 'border-transparent text-gray-400 hover:text-gray-600'">
+
+            {{ tab[1] }}
+
+          </button>
+
+        }
+      </div>
+
+      <!-- Todo List -->
+      <div
+        class="px-8 py-4 space-y-2 max-h-[380px] overflow-y-auto"
+        cdkDropList
+        [cdkDropListData]="todos()"
+        (cdkDropListDropped)="drop($event)"
+      >
+
+        @for (item of filteredTodos(); track item.id) {
+
+          <div cdkDrag>
+
+            <app-todo-item
+              [todo]="item"
+              (delete)="delete($event)"
+              (update)="update($event)">
+            </app-todo-item>
+
+          </div>
+
+        }
+
+      </div>
+
+      <!-- Empty -->
+      @if (filteredTodos().length === 0) {
+
+        <div class="text-center text-gray-400 py-12">
+
+          @if (filter() === 'completed') {
+            <p class="text-2xl mb-2">🎯</p>
+            <p class="text-sm">No completed tasks yet</p>
+          }
+
+          @else if (filter() === 'active') {
+            <p class="text-2xl mb-2">🎉</p>
+            <p class="text-sm">All caught up!</p>
+          }
+
+          @else {
+            <p class="text-2xl mb-2">📝</p>
+            <p class="text-sm">Add your first task above</p>
+          }
+
+        </div>
+
       }
 
-      @if (todos().length === 0) {
-        <div class="text-center text-gray-400 py-10">
-          🎉 Nothing to do
+      <!-- Footer -->
+      @if (todos().length > 0) {
+
+        <div class="px-8 py-3 border-t border-gray-100 flex items-center justify-between text-xs text-gray-400">
+          <span>{{ todos().length }} total tasks</span>
+          <span>{{ completedCount() }} completed</span>
         </div>
+
       }
 
     </div>

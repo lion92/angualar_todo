@@ -18,9 +18,31 @@ export class TodoItem {
 
   @Input() todo!: TodoItemModel;
 
-  @Output() update = new EventEmitter<{id:number, title:string}>();
+  @Output() update = new EventEmitter<{id: number; title: string; completed?: boolean}>();
   @Output() delete = new EventEmitter<number>();
 
   editTitle = '';
+  editMode = false;
+
+  startEdit() {
+    this.editTitle = this.todo.title;
+    this.editMode = true;
+  }
+
+  cancelEdit() {
+    this.editMode = false;
+    this.editTitle = '';
+  }
+
+  confirmUpdate() {
+    if (this.editTitle.trim()) {
+      this.update.emit({ id: this.todo.id, title: this.editTitle.trim(), completed: this.todo.completed });
+    }
+    this.editMode = false;
+  }
+
+  toggleCompleted() {
+    this.update.emit({ id: this.todo.id, title: this.todo.title, completed: !this.todo.completed });
+  }
 
 }
